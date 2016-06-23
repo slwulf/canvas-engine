@@ -1,0 +1,32 @@
+{
+  "name": "canvas-engine",
+  "version": "1.0.0",
+  "description": "A 2D object rendering engine for HTML5 Canvas.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run -s build && npm run -s watch",
+    "start-verbose": "npm run build && npm run watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+
+    "prebuild": "mkdir -p dist",
+    "build": "babel index.js --out-file dist/canvas-engine.js",
+    "postbuild": "echo 'Build completed successfully.'",
+
+    "prewatch": "npm run -s prebuild && echo 'Watching file index.js...'",
+    "watch": "babel index.js --watch --out-file dist/canvas-engine.js"
+  },
+  "keywords": [
+    "canvas",
+    "animation",
+    "game"
+  ],
+  "babel": {
+    "presets": ["es2015"]
+  },
+  "author": "@austinwulf",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-preset-es2015": "^6.9.0"
+  }
+}
