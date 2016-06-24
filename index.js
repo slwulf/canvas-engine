@@ -39,6 +39,7 @@
     canvas.width = this.sizes.width
     canvas.height = this.sizes.height
 
+    this.canvas = canvas
     this.context = canvas.getContext('2d')
 
     this.state = states.init
