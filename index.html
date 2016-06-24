@@ -9,13 +9,14 @@
     display: block;
     margin: 40px auto;
     border: 1px solid black;
+    cursor: none;
   }
 </style>
 <body>
   <canvas></canvas>
 
   <p style="text-align:center;margin-top:20px">
-    <strong>Click to shoot a laser!!!1</strong><br />
+    <strong>Press space to shoot a laser!!!1</strong><br />
     <span style="font-style:italic">(Note: These instructions may or may not be accurate.)</span>
   </p>
 
@@ -25,8 +26,22 @@
       // API and Testing
       const engine = Engine()
 
+      let playerSize = 15
+
+      let player = Engine.createObject({
+        init () {
+          this.setSize(playerSize)
+        },
+        render (ctx) {
+          let { x, y } = this.position
+          ctx.fillStyle = 'black'
+          ctx.fillRect(x, y, this.size.width, this.size.height)
+        }
+      })
+
       let emitter = Engine.createEmitter(5, {
         size: { width: 8, height: 2 },
+        spread: { high: .2, low: -.2 },
         source: { x: engine.sizes.width / 2, y: engine.sizes.height / 2 },
         renderParticle: function(ctx) {
           let { x, y } = this.position
@@ -42,25 +57,20 @@
         },
         render: function(ctx) {
           emitter.render(ctx)
+          player.render(ctx)
         }
       })
 
-      function getCursorPosition(canvas, event) {
-        let rect = canvas.getBoundingClientRect();
-        let x = event.clientX - rect.left;
-        let y = event.clientY - rect.top;
-
-        return { x, y }
-      }
-
       engine.canvas.onmousemove = function(event) {
-        let pos = getCursorPosition(engine.canvas, event)
-        emitter.setSource(pos)
+        let pos = Engine.coords.cursorPos(engine.canvas, event)
+        emitter.setSource({ x: pos.x + (playerSize / 2), y: pos.y + (playerSize / 2) })
+        player.setPosition(pos)
       }
 
-      engine.canvas.onclick = function() {
-        emitter.emit()
-        // engine.togglePause()
+      document.body.onkeydown = function(event) {
+        if (event.keyCode === 32) {
+          emitter.emit()
+        }
       }
     })()
   </script>
