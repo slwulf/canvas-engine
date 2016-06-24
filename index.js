@@ -56,7 +56,8 @@
 
   Engine.prototype = {
     setState (state) {
-      let vals = Object.keys(states).map(k => states[k])
+      let keys = Object.keys(states)
+      let vals = keys.map(k => states[k])
       let last = states.last
       states.last = this.state
 
@@ -66,7 +67,7 @@
         this.state = states[state]
       } else {
         states.last = last
-        throw new Error('Cannot find state ' + state + '. Possible states: ' + vals.join(', ') + '.')
+        throw new Error('Cannot find state ' + state + '. Possible states: ' + keys.join(', ') + '.')
       }
     },
 
