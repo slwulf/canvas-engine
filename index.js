@@ -237,7 +237,7 @@
   }
 
   /**
-   * ParticleEmitter
+   * Engine.createEmitter
    *
    * Emits objects and shit?
    */
@@ -247,7 +247,7 @@
       return new ParticleEmitter(limit, settings)
     }
 
-    let { color, position, size, speed, init } = settings
+    let { color, source, size, speed, init, renderParticle } = settings
     let spread = settings.spread || { high: 3, low: -3 }
 
     this.limit = limit
@@ -255,33 +255,39 @@
     this.color = settings.color || 'black'
     this.size = size || 2
 
-    this.source = { x: position.x || 0, y: position.y || 0 }
+    this.source = { x: source.x || 0, y: source.y || 0 }
     this.spread = { high: spread.high, low: spread.low }
     this.speed = typeof speed === 'number' ? Math.abs(speed) : 10
 
     this.particles = init ? [this.createParticle(this.source.x, this.source.y)] : []
+
+    this.renderParticle = renderParticle
   }
 
   Engine.createEmitter.prototype = {
     createParticle (position) {
-      let { size, color, spread, speed, source } = this
+      let { size, color, spread, speed, source, renderParticle } = this
       let { x: srcX, y: srcY } = source
 
       return Engine.createObject({
         init: function() {
           this.setSize(size)
           this.setPosition({ x: srcX, y: srcY })
-          this.setVelocity({ x: speed, y: randomInRange(spread.high, spread.low) })
+          this.setVelocity({ x: speed, y: Engine.random.inRangeFloat(spread.high, spread.low) })
           this.setAcceleration(1)
 
           this.color = color
         },
         render: function(ctx) {
-          let { x, y } = this.position
-          ctx.fillStyle = this.color
-          ctx.beginPath()
-          ctx.arc(x, y, this.size.width, 0, 2 * Math.PI)
-          ctx.fill()
+          if (typeof renderParticle === 'function') {
+            renderParticle.call(this, ctx)
+          } else {
+            let { x, y } = this.position
+            ctx.fillStyle = this.color
+            ctx.beginPath()
+            ctx.arc(x, y, this.size.width, 0, 2 * Math.PI)
+            ctx.fill()
+          }
         }
       })
     },
@@ -292,9 +298,20 @@
       })
 
       if (this.particles.length < this.limit) {
-        this.particles.push(this.createParticle(this.position))
+        this.particles.push(this.createParticle(this.source))
       } else {
         this.particles.shift()
+      }
+    },
+
+    setSource (src) {
+      if (src.x === undefined && typeof src !== 'number') {
+        throw new Error('Cannot set emitter source to ' + src + '.')
+      }
+
+      this.source = {
+        x: src.x || src,
+        y: src.y || src.x || src
       }
     },
 

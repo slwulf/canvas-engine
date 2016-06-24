@@ -20,23 +20,42 @@
       // API and Testing
       const engine = Engine()
 
-      let emitter = Engine.createEmitter(10, {
-        position: { x: engine.sizes.width / 2, y: engine.sizes.height / 2 }
+      let emitter = Engine.createEmitter(5, {
+        size: { width: 8, height: 2 },
+        source: { x: engine.sizes.width / 2, y: engine.sizes.height / 2 },
+        renderParticle: function(ctx) {
+          let { x, y } = this.position
+          ctx.fillStyle = Engine.random.inArray([ 'red', 'blue', 'green' ])
+          ctx.fillRect(x, y, this.size.width, this.size.height)
+        }
       })
 
       engine.start({
         loop: function() {
-          emitter.emit()
-          // emitter.particles.forEach(p => p.move())
+          // emitter.emit()
+          emitter.particles.forEach(p => p.move())
         },
         render: function(ctx) {
           emitter.render(ctx)
         }
       })
 
-      document.body.onclick = function() {
-        // emitter.emit()
-        engine.togglePause()
+      function getCursorPosition(canvas, event) {
+        let rect = canvas.getBoundingClientRect();
+        let x = event.clientX - rect.left;
+        let y = event.clientY - rect.top;
+
+        return { x, y }
+      }
+
+      engine.canvas.onmousemove = function(event) {
+        let pos = getCursorPosition(engine.canvas, event)
+        emitter.setSource(pos)
+      }
+
+      engine.canvas.onclick = function() {
+        emitter.emit()
+        // engine.togglePause()
       }
     })()
   </script>
