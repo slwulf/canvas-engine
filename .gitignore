@@ -1,5 +1,8 @@
+# folders
 node_modules/
 dist/
 
-*.sublime-*
+# files
 .DS_Store
+*.sublime-*
+
