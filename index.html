@@ -17,8 +17,28 @@
   <script src="dist/canvas-engine.js" type="text/javascript"></script>
   <script>
     (function() {
-      //
-    })
+      // API and Testing
+      const engine = Engine()
+
+      let emitter = Engine.createEmitter(10, {
+        position: { x: engine.sizes.width / 2, y: engine.sizes.height / 2 }
+      })
+
+      engine.start({
+        loop: function() {
+          emitter.emit()
+          // emitter.particles.forEach(p => p.move())
+        },
+        render: function(ctx) {
+          emitter.render(ctx)
+        }
+      })
+
+      document.body.onclick = function() {
+        // emitter.emit()
+        engine.togglePause()
+      }
+    })()
   </script>
 </body>
 </html>
