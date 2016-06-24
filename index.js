@@ -107,6 +107,16 @@
     }
   }
 
+  Engine.coords = {
+    cursorPos (canvas, event) {
+      let rect = canvas.getBoundingClientRect();
+      let { clientX, clientY } = event
+      let { left, top } = rect
+
+      return { x: (clientX - left), y: (clientY - top) }
+    }
+  }
+
   /**
    * Engine.random
    *
