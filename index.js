@@ -16,8 +16,8 @@
    */
 
   function Engine(settings = {
-      canvas: document.querySelector('canvas'),
-      size: { width: 640, height: 480 }
+    canvas: document.querySelector('canvas'),
+    size: { width: 640, height: 480 }
   }) {
     // always act as a constructor
     if (!(this instanceof Engine)) return new Engine(settings)
@@ -27,13 +27,22 @@
     // handle no canvas found
     if (!(canvas instanceof HTMLCanvasElement)) {
       throw new Error(
-        'Engine requires a canvas to render on. Pass a canvas element as `canvas.el` in your settings object. See the documentation for more help.'
+        'Engine requires a canvas to render on. Pass a canvas element as ' +
+        '`canvas` in your settings object. See the documentation for more help.'
       )
+    }
+
+    // handle no size found
+    if (!size.hasOwnProperty('width')) {
+      size = {
+        width: canvas.width,
+        height: canvas.height
+      }
     }
 
     this.sizes = {
       width: size.width,
-      height: size.height
+      height: size.height || size.width
     }
 
     canvas.width = this.sizes.width
