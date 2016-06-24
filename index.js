@@ -9,17 +9,6 @@
     last: null
   }
 
-  // unsorted helper functions
-  // TODO: organize these?
-
-  function randomInRange(max, min = 0) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-  }
-
-  function randomInArray(arr) {
-    return arr[randomInRange(arr.length - 1)]
-  }
-
   /**
    * Engine
    *
@@ -109,7 +98,43 @@
   }
 
   /**
-   * GameObject
+   * Engine.random
+   *
+   * Utility methods for getting random
+   * (or semi-random, probably) values.
+   */
+
+  Engine.random = {
+    inRange (min, max = 0) {
+      let maximum = max
+      let minimum = min
+
+      if (min > max) {
+        maximum = min
+        minimum = max
+      }
+
+      return Math.floor(Math.random() * (maximum - minimum + 1)) + minimum
+    },
+    inRangeFloat (min, max) {
+      let maximum = max
+      let minimum = min
+
+      if (min > max) {
+        maximum = min
+        minimum = max
+      }
+
+      return Math.random() * (maximum - minimum) + minimum
+    },
+    inArray (array) {
+      let index = this.inRange(array.length - 1)
+      return array[index]
+    }
+  }
+
+  /**
+   * Engine.createObject
    *
    * Creates an object with position, velocity,
    * acceleration, and size. Requires a render
