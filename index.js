@@ -200,7 +200,14 @@
     },
 
     setSize (width, height = width) {
-      this.size = { width, height }
+      if (arguments.length === 1 && width.hasOwnProperty('width')) {
+        this.size = { width: width.width, height: width.height || width.width }
+      } else if (arguments.length === 2 && typeof width === 'number') {
+        this.size = { width: width, height: (typeof height === 'number' ? height : width) }
+      } else {
+        throw new Error('setSize called with invalid arguments.')
+      }
+
       return this
     },
 
