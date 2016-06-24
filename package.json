@@ -9,11 +9,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
 
     "prebuild": "mkdir -p dist",
-    "build": "babel index.js --out-file dist/canvas-engine.js",
+    "build": "babel ${npm_package_main} --out-file dist/${npm_package_name}.js",
     "postbuild": "echo 'Build completed successfully.'",
 
-    "prewatch": "npm run -s prebuild && echo 'Watching file index.js...'",
-    "watch": "babel index.js --watch --out-file dist/canvas-engine.js"
+    "prewatch": "npm run -s prebuild && echo 'Watching file ${npm_package_main}...'",
+    "watch": "babel ${npm_package_main} --watch --out-file dist/${npm_package_name}.js"
   },
   "keywords": [
     "canvas",
